@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于 "静默阅读" 在线阅读器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#111111',
+                        secondary: '#444444',
+                        neutral: '#F9FAFB',
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(0, 0, 0, 0.05)',
+                        'hover': '0 8px 30px rgba(0, 0, 0, 0.12)',
+                    }
+                },
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-balance {
+                text-wrap: balance;
+            }
+            .section-transition {
+                transition: all 0.3s ease-in-out;
+            }
+            .scroll-smooth {
+                scroll-behavior: smooth;
+            }
+            .nav-shadow {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-neutral text-dark antialiased scroll-smooth">
+    <!-- 顶部标题 -->
+    <header class="pt-20 pb-16 md:pt-28 md:pb-20 bg-gradient-to-br from-primary/5 to-primary/10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex justify-center items-center mb-4">
+                    <i class="fa fa-book text-primary text-2xl mr-2"></i>
+                    <span class="text-xl font-semibold text-primary">静默阅读</span>
+                </div>
+                <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-dark mb-4 leading-tight">
+                    关于 <span class="text-primary">"静默阅读"</span> 在线阅读器
+                </h1>
+                <p class="text-[clamp(1rem,2vw,1.25rem)] text-secondary max-w-3xl mx-auto mb-8 text-balance">
+                    一款专注于提供无干扰阅读体验的一次性在线工具，让阅读回归本质
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="py-12 -mt-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-xl shadow-soft p-6 md:p-8 mb-8 section-transition hover:shadow-hover">
+                <h2 id="tool-definition" class="text-2xl md:text-3xl font-bold text-dark mb-6 flex items-center">
+                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary mr-3">
+                        <i class="fa fa-info-circle"></i>
+                    </span>
+                    一、关于 “静默阅读” 在线阅读器的说明
+                </h2>
+                
+                <div class="space-y-8">
+                    <div id="tool-definition-content" class="prose max-w-none">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary mr-2">
+                                1
+                            </span>
+                            （一）工具定义
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            “静默阅读” 是一款功能简洁的一次性在线阅读工具，其核心定位为向用户提供无冗余干扰的纯粹阅读服务。该工具仅支持用户单次上传文件并进行阅读操作，不具备文件长期存储、历史记录留存及复杂管理等附加功能，用户阅读行为终止后，与本次阅读相关的文件数据及操作记录均不予以保留。
+                        </p>
+                    </div>
+                    
+                    <div id="core-features" class="prose max-w-none">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary mr-2">
+                                2
+                            </span>
+                            （二）核心功能
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-6 mt-6">
+                            <div class="bg-neutral rounded-lg p-5 border border-gray-100 hover:border-primary/30 transition-all duration-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-primary/10 p-3 rounded-lg text-primary">
+                                        <i class="fa fa-ban text-xl"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-medium text-dark mb-2">干扰屏蔽功能</h4>
+                                        <p class="text-gray-600">
+                                            在用户阅读过程中，自动对阅读界面内可能出现的广告弹窗、无关跳转链接、悬浮提示等干扰性元素进行过滤与屏蔽，确保阅读界面的纯净性，减少外界因素对用户阅读专注度的影响。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-neutral rounded-lg p-5 border border-gray-100 hover:border-primary/30 transition-all duration-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-primary/10 p-3 rounded-lg text-primary">
+                                        <i class="fa fa-sliders text-xl"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-medium text-dark mb-2">基础阅读设置功能</h4>
+                                        <p class="text-gray-600">
+                                            为适配不同用户的阅读习惯与视觉需求，提供文本字体大小调节（可在预设范围内进行多级调整）、文本颜色选择（含多种常规色系及高对比度选项）、行距设置（支持单倍、1.5 倍、双倍等常用行距模式）以及背景色切换（含白色、浅灰、护眼黄等基础色系）等基础调节功能。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-neutral rounded-lg p-5 border border-gray-100 hover:border-primary/30 transition-all duration-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-primary/10 p-3 rounded-lg text-primary">
+                                        <i class="fa fa-upload text-xl"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-medium text-dark mb-2">文件上传与阅读功能</h4>
+                                        <p class="text-gray-600">
+                                            支持用户上传符合格式要求的电子文件进行阅读，兼容的文件格式包括但不限于 PDF 格式（版本兼容至 PDF 1.7）、TXT 纯文本格式、DOC 及 DOCX 格式（Microsoft Word 2003 及以上版本生成文件）。上传的文件仅用于当次阅读场景，阅读会话结束后即不再保留。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="application-scenarios" class="prose max-w-none">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary mr-2">
+                                3
+                            </span>
+                            （三）适用场景
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-6 mt-6">
+                            <div class="bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg p-5 border border-primary/10 hover:shadow-lg transition-all duration-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-primary/10 p-3 rounded-lg text-primary">
+                                        <i class="fa fa-file-text-o text-xl"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-medium text-dark mb-2">临时文件即时阅读场景</h4>
+                                        <p class="text-gray-600">
+                                            适用于用户获取临时文档、短期使用资料后，需快速打开并进行即时阅读的场景，无需进行文件的长期管理与存储。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg p-5 border border-primary/10 hover:shadow-lg transition-all duration-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-primary/10 p-3 rounded-lg text-primary">
+                                        <i class="fa fa-book text-xl"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-medium text-dark mb-2">轻量型阅读需求场景</h4>
+                                        <p class="text-gray-600">
+                                            满足用户在无复杂功能需求的情况下，仅需专注于文件内容阅读的使用需求，尤其适合对阅读环境纯净度有要求的用户。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="usage-method" class="prose max-w-none">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary mr-2">
+                                4
+                            </span>
+                            （四）使用方式
+                        </h3>
+                        
+                        <div class="bg-neutral rounded-lg p-6 border border-gray-100">
+                            <ol class="space-y-4 list-decimal pl-5">
+                                <li class="text-gray-700 leading-relaxed">
+                                    通过任意主流浏览器访问 “静默阅读” 在线阅读器官方指定平台，无需进行用户注册及账号登录操作。
+                                </li>
+                                <li class="text-gray-700 leading-relaxed">
+                                    在平台指定的文件上传区域选择本地设备中需阅读的文件并完成上传，上传成功后系统自动进入阅读界面，用户可开始阅读。
+                                </li>
+                                <li class="text-gray-700 leading-relaxed">
+                                    当用户主动关闭阅读页面、关闭浏览器或因网络中断等原因导致阅读会话终止时，本次阅读相关数据即时清除，无法通过平台再次访问本次上传的文件。
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-soft p-6 md:p-8 section-transition hover:shadow-hover">
+                <h2 id="user-guidelines" class="text-2xl md:text-3xl font-bold text-dark mb-6 flex items-center">
+                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary mr-3">
+                        <i class="fa fa-bookmark text-xl"></i>
+                    </span>
+                    二、用户须知
+                </h2>
+                
+                <div class="space-y-8">
+                    <div class="prose max-w-none">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary mr-2">
+                                1
+                            </span>
+                            （一）使用规则
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-primary/5 rounded-lg p-4 border border-primary/20">
+                                <h4 class="font-medium text-dark flex items-center">
+                                    <i class="fa fa-gavel text-primary mr-2"></i>
+                                    合法合规使用要求
+                                </h4>
+                                <p class="text-gray-600 mt-2">
+                                    用户在使用本工具过程中，必须严格遵守国家现行有效的法律法规、行政法规、部门规章及相关规范性文件的规定，不得利用本工具上传、浏览、传播任何含有违反法律规定、损害社会公共利益、违背公序良俗的内容，包括但不限于反动言论、淫秽色情信息、暴力恐怖内容、虚假诈骗信息等。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-primary/5 rounded-lg p-4 border border-primary/20">
+                                <h4 class="font-medium text-dark flex items-center">
+                                    <i class="fa fa-copyright text-primary mr-2"></i>
+                                    知识产权保护要求
+                                </h4>
+                                <p class="text-gray-600 mt-2">
+                                    用户上传至本工具的文件必须为用户依法享有合法权利的文件，或已获得文件权利人的合法授权许可。不得上传任何侵犯他人著作权、商标权、专利权、商业秘密及其他知识产权的文件，不得利用本工具实施任何侵犯他人知识产权的行为。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-primary/5 rounded-lg p-4 border border-primary/20">
+                                <h4 class="font-medium text-dark flex items-center">
+                                    <i class="fa fa-file-code-o text-primary mr-2"></i>
+                                    文件内容规范要求
+                                </h4>
+                                <p class="text-gray-600 mt-2">
+                                    上传的文件内容必须真实、合法，不得包含任何计算机病毒、木马程序、恶意代码、逻辑炸弹等可能破坏计算机系统安全、损害平台及其他用户合法权益的有害信息；文件格式必须符合本工具明确公示的支持范围，不符合格式要求的文件将被系统拒绝上传。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prose max-w-none">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary mr-2">
+                                2
+                            </span>
+                            （二）注意事项
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-6 mt-6">
+                            <div class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-all duration-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-primary/10 p-3 rounded-lg text-primary">
+                                        <i class="fa fa-key text-xl"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-medium text-dark mb-2">权限使用说明</h4>
+                                        <p class="text-gray-600">
+                                            为实现文件上传及读取功能，本工具在用户发起文件上传操作时，需临时获取用户所使用设备的文件读取权限。该权限仅用于本次上传文件的临时读取，仅限读取用户主动选择上传的特定文件，不会读取用户设备内的其他文件内容。当本次阅读会话终止后，该临时权限自动失效，工具不再具备文件访问能力。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-all duration-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-primary/10 p-3 rounded-lg text-primary">
+                                        <i class="fa fa-globe text-xl"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-medium text-dark mb-2">兼容性问题说明</h4>
+                                        <p class="text-gray-600">
+                                            由于不同品牌及版本的浏览器（如 Chrome、Firefox、Edge、Safari 等）、操作系统（如 Windows、macOS、iOS、Android 等）在技术标准及运行环境上存在差异，可能导致文件上传失败、上传后文件内容显示错乱（如排版异常、图片缺失、文字乱码等）、功能按钮响应延迟或失效等兼容性问题。如遇上述问题，建议用户更换至最新版本的主流浏览器重新尝试操作。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-all duration-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-primary/10 p-3 rounded-lg text-primary">
+                                        <i class="fa fa-database text-xl"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-medium text-dark mb-2">数据特性说明</h4>
+                                        <p class="text-gray-600">
+                                            本工具遵循一次性使用原则，不设置文件存储机制，不对用户上传的文件内容、阅读进度、操作记录等任何数据进行保存。用户关闭阅读页面后，本次上传的文件即无法通过本工具再次访问。请用户在使用本工具阅读重要文件前，务必在本地设备对文件进行备份，避免因误操作关闭页面导致文件无法再次查看而造成损失。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-all duration-200">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-primary/10 p-3 rounded-lg text-primary">
+                                        <i class="fa fa-file-o text-xl"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-medium text-dark mb-2">文件大小限制说明</h4>
+                                        <p class="text-gray-600">
+                                            本工具对用户单次上传的文件大小设置上限限制，具体限制标准以平台上传界面实时显示的提示信息为准。超出该限制的文件，系统将自动拒绝上传请求，用户需对文件进行压缩处理或拆分后再尝试上传（拆分文件需确保内容完整性）。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prose max-w-none">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary mr-2">
+                                3
+                            </span>
+                            （三）权益与责任
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-3 gap-6 mt-6">
+                            <div class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-all duration-200">
+                                <div class="flex flex-col items-center text-center">
+                                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+                                        <i class="fa fa-user text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-medium text-dark mb-2">用户权益</h4>
+                                    <p class="text-gray-600">
+                                        在用户遵守本须知及平台相关规定的前提下，有权按照工具功能说明上传符合要求的文件，并使用工具提供的基础阅读设置功能；在使用过程中如遇到工具功能性故障（非用户操作不当或环境问题导致），有权向工具运营方进行反馈，运营方应在合理期限内对反馈问题进行核查与处理。
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-all duration-200">
+                                <div class="flex flex-col items-center text-center">
+                                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+                                        <i class="fa fa-shield text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-medium text-dark mb-2">用户责任</h4>
+                                    <p class="text-gray-600">
+                                        用户应对其上传的文件内容的合法性、真实性、完整性负责，对其使用本工具的全部行为及由此产生的一切后果承担法律责任。如因用户上传违规文件、实施侵权行为或违反本须知及相关法律法规规定，导致工具运营方或第三方遭受损失的，用户应承担全部赔偿责任，并承担由此引发的一切法律后果。因本工具不保留文件数据，用户需自行负责所上传文件的备份、管理及安全保障，因文件未备份导致的丢失风险由用户自行承担。
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-all duration-200">
+                                <div class="flex flex-col items-center text-center">
+                                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+                                        <i class="fa fa-server text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-medium text-dark mb-2">平台责任</h4>
+                                    <p class="text-gray-600">
+                                        工具运营方应按照本说明及相关承诺提供符合功能描述的阅读服务，采取合理技术措施保障工具的正常运行及用户在使用过程中的数据传输安全；对用户上传的文件内容仅进行技术层面的格式校验，不承担对文件内容的实质审查义务，但发现明显违规内容时，有权立即终止服务并采取相应处理措施。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12 mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fa fa-book text-white text-2xl mr-2"></i>
+                        <span class="text-lg font-semibold">静默阅读</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        专注于提供无干扰的纯粹阅读体验，让每一次阅读都回归本质。
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">联系我们</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-400">
+                            <i class="fa fa-envelope mr-2"></i>
+                            <a href="mailto:support@silentreader.com" class="hover:text-white transition-colors duration-200">support@silentreader.com</a>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fa fa-phone mr-2"></i>
+                            <span>400-123-4567</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fa fa-map-marker mr-2"></i>
+                            <span>北京市海淀区中关村大街1号</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 静默阅读. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+    
