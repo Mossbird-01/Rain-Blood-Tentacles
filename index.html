@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@300;400;600&family=Orbitron:wght@400;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.loli.net/css?family=UnifrakturMaguntia" rel="stylesheet">
+    <title>认知回廊 | 雨、血和触手</title>
+    <style>
+        /* 基础样式 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Raleway', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #030014 0%, #2c3e50 100%);
+            color: rgba(255,255,255,0.9);
+            overscroll-behavior: contain;
+        }
+        
+        /* 内容容器 */
+        .content {
+            scroll-snap-type: y mandatory;
+            height: 100vh;
+            overflow-y: auto;
+            scroll-padding-top: 60px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            scroll-snap-align: start;
+            position: relative;
+            transition: background-color 0.5s ease;
+            overflow: hidden;
+        }
+        
+        /* 自定义字体样式 */
+         .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            font-weight: 400;
+            font-size: 2rem;
+        }
+        
+        .title-font {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .tech-font {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+        .font-zcool {
+             font-family: 'ZCOOL KuaiLe', sans-serif;
+             font-size: 1.2rem;
+             font-weight: 300;
+        }
+        .font-page{
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+        /* .handwriting-font {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+             
+        } */
+        
+        .normal-font {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 400;
+        }
+        
+        /* 雨滴效果 */
+        .rain-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .rain-drop {
+            position: absolute;
+            width: 2.5px;
+            height: 25px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            animation: rainFall linear infinite;
+        }
+        
+        @keyframes rainFall {
+            0% {
+                transform: translateY(-50px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0.2;
+            }
+        }
+        
+        /* 血迹效果 */
+        .blood-stain {
+            position: absolute;
+            background: rgba(180, 0, 0, 0.15);
+            border-radius: 50%;
+            filter: blur(15px);
+            z-index: -1;
+        }
+        
+        /* 科技感元素 */
+        .tech-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 150, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 150, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        .data-stream {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(0, 150, 255, 0.1) 10%,
+                transparent 20%,
+                transparent 80%,
+                rgba(0, 150, 255, 0.1) 90%,
+                transparent 100%
+            );
+            animation: dataFlow 15s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes dataFlow {
+            0% { background-position: 0 100%; }
+            100% { background-position: 0 0; }
+        }
+        
+        /* 霓虹灯效果 */
+        .neon-text {
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #0ff,
+                0 0 40px #0ff,
+                0 0 80px #0ff;
+            color: white;
+            animation: neonPulse 1.5s infinite alternate;
+        }
+        
+        @keyframes neonPulse {
+            from {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #0ff,
+                    0 0 40px #0ff,
+                    0 0 80px #0ff;
+            }
+            to {
+                text-shadow: 
+                    0 0 2px #fff,
+                    0 0 5px #fff,
+                    0 0 10px #0ff,
+                    0 0 20px #0ff,
+                    0 0 40px #0ff;
+            }
+        }
+        
+        /* 文本容器 */
+        .text-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000), 
+                        transform 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        }
+        .text-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 章节标题 */
+        .chapter-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .chapter-title::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 80px;
+            height: 3px;
+            background: #ff6b6b;
+        }
+        
+        /* 按钮样式 */
+        .restart-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: white;
+            background: transparent;
+            border: 2px solid #ff6b6b;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .restart-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #c70039);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        
+        .restart-button:hover::before {
+            width: 100%;
+        }
+        
+        .restart-button:hover {
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+            transform: translateY(-3px);
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 101;
+            padding: 20px;
+        }
+        
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .navbar li {
+            cursor: pointer;
+            color: rgba(255,255,255,0.8);
+            font-weight: bold;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .navbar li:hover {
+            color: #ff9800;
+            text-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
+        }
+        
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            color: white;
+            font-size: 24px;
+        }
+        
+        /* 页眉 */
+        .header {
+            background-color: rgba(11, 13, 23, 0.9);
+            text-align: left;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 150, 255, 0.2);
+        }
+        
+        .text-accent {
+            color: #ff6b6b;
+            margin: 0;
+            padding-left: 20px;
+            font-size: 30px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .text-light {
+            color: #e0e0e0;
+            margin: 0;
+            padding-left: 10px;
+            font-size: 30px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background-color: rgba(11, 13, 23, 0.9);
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 20px;
+            min-height: 10vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            scroll-snap-align: start;
+            border-top: 1px solid rgba(0, 150, 255, 0.2);
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        /* 滚动指示器 */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.7);
+            animation: bounce 2s infinite;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) translateX(-50%); }
+            50% { transform: translateY(-15px) translateX(-50%); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar ul {
+                display: none;
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                background-color: rgba(11, 13, 23, 0.95);
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.5);
+                flex-direction: column;
+                gap: 15px;
+                width: 200px;
+            }
+            
+            .navbar ul.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .text-container {
+                padding: 20px;
+            }
+            
+            .chapter-title {
+                font-size: 2rem;
+            }
+        }
+            .typewriter {
+                overflow: hidden; /* 隐藏溢出文本 */
+                border-right: 2px solid #00ffff; /* 光标效果 */
+                white-space: nowrap; /* 禁止换行 */
+                margin: 0;
+                opacity: 0; /* 初始隐藏 */
+                animation: 
+                    typing 3s steps(40, end) forwards, /* 减少steps数 */
+                    blink-caret 0.75s step-end 4; /* 只闪烁4次 */
+                animation-play-state: paused; /* 初始暂停 */
+        }
+
+            /* 逐字显示动画 */
+            
+            @keyframes typing {
+                from { 
+                width: 0;
+                opacity: 1;
+                }
+                to { 
+                width: 100%;
+                opacity: 1;
+                }
+            }
+
+            /* 光标闪烁动画 */
+            @keyframes blink-caret {
+                from, to { border-color: transparent }
+                50% { border-color: #00ffff; }
+            }
+            @keyframes hide-caret{
+                to { border-right-color: transparent; }
+                
+            }
+            /* 高亮文本 */
+            .highlight {
+                color: #ff6b6b;
+                font-weight: 600;
+            }
+                
+            .tech-highlight {
+                color: #00ffff;
+                font-family: 'Orbitron', sans-serif;
+            }
+                
+           /* 首页标题基础样式 */
+            .first-page-title {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                font-family: sans-serif;
+                overflow: hidden;
+            }
+
+            /* 主标题样式及动画 */
+            .main-title-font {
+                font-family: 'Playfair Display', serif;
+                font-weight: 700;
+                letter-spacing: 1px;
+                opacity: 0;
+                animation: fadeIn 2s ease-in-out forwards;
+            }
+
+            /* 副标题样式及动画 */
+            .font-orbitron span {
+                opacity: 0;
+                display: inline-block;
+                animation: fadeIn 2s ease-in-out 1s forwards;
+            }
+            .explain-title-font{
+                font-family: 'Playfair Display', serif;
+                font-weight: 700;
+                letter-spacing: 1px;
+                opacity: 0;
+                animation: fadeIn 2s ease-in-out 2s forwards;
+            }
+
+            /* 定义淡入动画 */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="final-read-tool-pro.html" class="hover:text-accent transition-colors">
+        <div class="text-xl font-bold tracking-widers"> 
+            <span class="text-accent">认知</span><span class="text-light">回廊</span>
+        </div>
+        </a>
+    </div>
+    
+    <div class="navbar">
+        <div class="menu-toggle" id="menuToggle">☰</div>
+        <ul id="navMenu">
+            <li onclick="scrollToSection('section0')">序幕</li>
+            <li onclick="scrollToSection('section1')">雨夜</li>
+            <li onclick="scrollToSection('section2')">撞击</li>
+            <li onclick="scrollToSection('section3')">触手</li>
+            <li onclick="scrollToSection('section4')">警察</li>
+            <li onclick="scrollToSection('section5')">觉醒</li>
+            <li onclick="scrollToSection('section6')">真相</li>
+            <li onclick="scrollToSection('section7')">探索</li>
+            <li onclick="scrollToSection('section8')">重新开始</li>
+        </ul>
+    </div>
+    
+    <div class="content" id="contentContainer">
+        <!-- 序幕 -->
+        <div class="section" id="section0">
+            <div class="rain-background" id="rainEffect"></div>
+            <div class="absolute inset-0 bg-[url('https://i.postimg.cc/zDCQ8gkh/page000.webp')] bg-cover bg-center z-0 opacity-20"></div>
+              <div class="first-page-title">
+                <h1 class="main-title-font text-5xl md:text-7xl text-center mb-10">雨、<span class="text-red-500">血</span>和触手</h1>
+                <p class="font-orbitron tracking-wider"><span>Rain,</span><span class="text-red-500"> Blood</span><span> and </span><span>Tentacles</span></p>
+                <p class="explain-title-font tech-font text-xl text-center italic">"认知回廊的大门已经打开，里世界的阴影触手可及"</p>
+            </div>
+            <div class="scroll-indicator">⌄</div>
+        </div>
+        
+        <!-- 雨夜 -->
+        <div class="section" id="section1" style="background-color: rgba(13, 19, 33, 0.7);">
+            <div class="rain-background"></div>
+            <div class="absolute inset-0 bg-[url('https://i.postimg.cc/gj5wZs1s/page1.webp')] bg-cover bg-center z-0 opacity-20"></div>
+            <div class="text-container">
+                <h2 class="chapter-title title-font">雨夜</h2>
+                <p class="normal-font text-lg leading-relaxed">
+                    冰冷的雨水像无数根细密的钢针，带着初冬的凛冽，穿透森意墨单薄的卫衣，狠狠扎进皮肤，更深地刺入骨髓。他站在人行道边缘，湿透的头发紧贴着苍白的额头，雨水顺着发梢脸颊、下巴不断滴落，砸在脚下因积水而反光的柏油路面上。
+                    <br><span class="highlight">警灯闪烁，人影嘈杂。他木楞地站着。</span>
+                </p>
+                <div class="bg-slate-800/30 p-6 rounded-lg border-l-4 border-red-500">
+                     <p class="text-lg leading-relaxed">
+                     "操!饿死老子了!墨仔，今天累得够呛，待会儿非得狠狠宰你一顿不可!"
+                    </p>
+                 </div>
+            </div>
+             
+        </div>
+        
+        <!-- 撞击 -->
+        <div class="section" id="section2" style="background-color: rgba(30, 15, 20, 0.8);">
+            <div class="blood-stain" style="width: 300px; height: 300px; top: 20%; left: 10%;"></div>
+            <div class="blood-stain" style="width: 150px; height: 150px; top: 60%; right: 15%;"></div>
+            <div class="absolute inset-0 bg-[url('https://i.postimg.cc/G3STV39D/page2.webp')] bg-cover bg-center z-0 opacity-50"></div>
+            <div class="text-container">
+                <h2 class="chapter-title title-font">撞击</h2>
+                <p class="normal-font text-lg leading-relaxed">
+                    就在这短暂到不足一秒的低头的瞬间，世界像是被一只无形的巨手抓住，然后……狠狠地撕裂了!
+                    <span class="highlight">一声沉闷到足以令人心脏骤停的巨响</span>，混杂着轮胎在极度湿滑的路面上疯狂摩擦、撕扯却根本抓不住任何东西的、尖锐到刺穿灵魂的啸叫，猛地、毫无征兆地在森意墨的头顶炸开!
+                </p>
+                <div class="bg-slate-800/30 p-6 rounded-lg border-l-4 border-red-500">
+                    他清楚地看到<span class="text-red-500">余奕桉</span>的身体，那个几秒前还充满生命力、散发着热气的身影，此刻像是一只被顽童狂怒下随手丢弃的、残破不堪的旧布偶，以一种似乎扭曲而诡异的姿态，高高地、却又不可思议地轻飘飘地飞了起来。
+                </div>
+            </div>
+        </div>
+        
+        <!-- 触手 -->
+        <div class="section" id="section3" style="background-color: rgba(15, 25, 30, 0.9);">
+            <div class="data-stream"></div>
+            <div class="absolute inset-0 bg-[url('https://i.postimg.cc/Nf92chrz/page3.webp')] bg-cover bg-center z-0 opacity-50"></div>
+            <div class="text-container">
+                <h2 class="chapter-title title-font">苍白眷族</h2>
+                <p class="normal-font text-lg leading-relaxed">
+                    就在余奕桉倒下的暗红水洼边缘，距离那双静止的球鞋不过半尺远的地方，那个不起眼的、方形的、正被源源不断的雨水灌满的排水口——那锈迹斑斑的洞口边缘——有什么东西······活物一样的东西······伸了出来。
+                </p>
+                <p class=" text-blue-200/60 font-bold mt-6 font-page">
+                    它比成年男子的手臂<span class="text-red-800">更长，更细，更……不对劲</span>。它呈现出一种毫无生气、宛如劣质蜡像般凝固的惨白色泽，像被遗忘在福尔马林溶液中浸泡了数十年、早已失去所有弹性和活力的尸体皮肤。
+                </p>
+            </div>
+        </div>
+        
+        <!-- 警察 -->
+        <div class="section" id="section4" style="background-color: rgba(20, 20, 30, 0.85);">
+            <div class="tech-grid"></div>
+            <div class="absolute inset-0 bg-[url('https://i.postimg.cc/90zR0Kgz/page4.webp')] bg-cover bg-center z-0 opacity-60"></div>
+            <div class="text-container">
+                <h2 class="chapter-title title-font">难以置信</h2>
+                <p class="normal-font text-lg leading-relaxed">
+                    一位穿着深蓝色雨衣、帽檐压得很低的警察向他走来，脚步踩在积水里啪啪作响。雨衣的褶皱让他看起来充满压迫感。
+                    <span class="highlight">"请告诉我们刚才这里发生了什么?我们只看到血迹，伤者呢?被撞飞到什么地方去了?"</span>
+                </p>
+                <p class="mt-6 font-page font-bold">
+                    森意墨的嘴唇不受控制地剧烈哆嗦着，喉咙里卡了砂纸般又干又糙。他只能抬起如同触电般微微颤抖的手，指向余奕桉最后消失的、那片几乎没有任何痕迹的湿漉地面，接着，又带着无法言喻的恐惧，指向那个仿佛<span class="text-red-500">恶魔之喉</span>的、黑洞洞的<span class="text-red-500 font-bold text-xl">排水口</span>。
+                </p>
+            </div>
+        </div>
+        
+        <!-- 觉醒 -->
+        <div class="section" id="section5" style="background-color: rgba(10, 15, 40, 0.9);">
+            <div class="data-stream"></div>
+            <div class="tech-grid"></div>
+            <div class="absolute inset-0 bg-[url('https://i.postimg.cc/RFJ2mQwf/page5.webp')] bg-cover bg-center z-0 opacity-60"></div>
+            <div class="text-container">
+                <h2 class="chapter-title title-font">认知觉醒</h2>
+                <p class="tech-font text-lg leading-relaxed">
+                    就在这极致的痛苦和混乱即将把他彻底吞噬的临界点，一个声音，毫无征兆地，直接在他脑海深处响起。
+                </p>
+                <div class="mt-6 p-4 bg-black bg-opacity-50 rounded-lg" id="terminal-container">
+        <!-- 每个段落添加打字动画类 -->
+                    <p class="tech-highlight tech-font typewriter">"检测到高阈值精神冲击......符合接入条件......"</p>
+                    <p class="tech-highlight tech-font typewriter" data-delay="1.5">"神经链接建立中……10%……35%……78%……"</p>
+                    <p class="tech-highlight tech-font typewriter" data-delay="3">"冗余感知单元强制剥离……痛觉屏蔽启动……"</p>
+                    <p class="neon-text tech-font typewriter" data-delay="4.5">"初级权限已激活。"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 真相 -->
+        <div class="section" id="section6" style="background-color: rgba(5, 10, 30, 0.95);">
+            <div class="tech-grid"></div>
+            <div class="data-stream"></div>
+            <div class="absolute inset-0 bg-[url('https://i.postimg.cc/fR5Gfbw3/page9.webp')] bg-cover bg-center z-0 opacity-30"></div>
+            <div class="text-container">
+                <h2 class="chapter-title title-font">真相之眼</h2>
+                <p class="normal-font text-lg leading-relaxed">
+                    幽蓝的光幕依旧悬浮在他的意识中，冷静得像个旁观者。碎裂的镜子倒影里，那光幕的微光映在他布满血丝、充满仇恨与迷茫的瞳孔深处，像两点幽冷的鬼火。
+                </p>
+                <div class="mt-6 p-4 bg-black bg-opacity-70 rounded-lg border border-cyan-500 border-opacity-30">
+                    <p class="tech-highlight tech-font">[实体类型:能量态/半物质化生命(幼生期)]</p>
+                    <p class="tech-highlight tech-font">[生态位:底层采集者]</p>
+                    <p class="tech-highlight tech-font">[行为模式:依附于主物质界'暗流节点']</p>
+                    <p class="tech-highlight tech-font">[威胁评估:低(对具备'阈限感知'且未主动攻击的个体)]</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 探索 -->
+        <div class="section" id="section7" style="background-color: rgba(0, 5, 20, 0.98);">
+            <div class="tech-grid"></div>
+            <div class="data-stream"></div>
+            <div class="absolute inset-0 bg-[url('https://i.postimg.cc/7Zxvzzy8/page6.webp')] bg-cover bg-center z-0 opacity-60"></div>
+
+            <div class="text-container">
+                <h2 class="chapter-title title-font">无尽回廊</h2>
+                <p class="normal-font text-lg leading-relaxed">
+                    窗外的雨，似乎小了一些。但森意墨知道，另一场风暴，一场关乎真相、复仇与生存的风暴，才刚刚在他破碎的世界里，酝酿起第一道无声的惊雷。
+                </p>
+                <p class="tech-highlight tech-font mt-6">
+                    认知回廊的大门已经打开，里世界的阴影触手可及。而他，这个被迫的"探索者"，除了握紧这把危险的钥匙，踏入这无尽的回廊，似乎已别无选择。
+                </p>
+                <p class="mt-6 italic">
+                    余奕桉消失在黑暗中的身影，成了他前行路上唯一的光标，也是永恒的<span class="text-red-500">诅咒</span>。
+                </p>
+            </div>
+        </div>
+        
+        <!-- 重新开始 -->
+        <div class="section" id="section8">
+            <!-- <div class="tech-grid"></div> -->
+            <div class="absolute inset-0 bg-[url('https://i.postimg.cc/yNb22r3s/page8.webp')] bg-cover bg-center z-0 opacity-30"></div>
+            <div class="text-container text-center">
+                <h2 class="chapter-title title-font text-center">重新开始</h2>
+                <p class="normal-font text-lg mb-8">
+                    您已完成本次认知体验，是否重启叙事回路？
+                </p>
+                <button class="restart-button" onclick="scrollToSection('section0')">
+                    重启叙事回路
+                </button>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer" id="footer">
+            <div class="container mx-auto px-6">
+                <p class="text-gray-400">© 2025 《雨、血和触手》</p>
+                <p class="text-gray-500 text-sm mt-2">基于同名说设计 | 探索未知的边界</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 生成雨滴效果
+        function createRain() {
+            const rainContainer = document.getElementById('rainEffect');
+            const dropsCount = window.innerWidth / 4;
+            
+            for (let i = 0; i < dropsCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('rain-drop');
+                
+                // 随机属性
+                const left = Math.random() * 100;
+                const animationDuration = 0.5 + Math.random() * 1;
+                const animationDelay = Math.random() * 5;
+                const height = 10 + Math.random() * 30;
+                const opacity = 0.1 + Math.random() * 0.3;
+                
+                drop.style.left = `${left}%`;
+                drop.style.animationDuration = `${animationDuration}s`;
+                drop.style.animationDelay = `${animationDelay}s`;
+                drop.style.height = `${height}px`;
+                drop.style.opacity = opacity;
+                
+                rainContainer.appendChild(drop);
+            }
+        }
+        
+        // 导航菜单切换
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+        
+        // 滚动到指定部分
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                
+                // 在移动设备上点击导航项后关闭菜单
+                if (window.innerWidth < 768) {
+                    navMenu.classList.remove('active');
+                }
+            }
+        }
+        
+        // 文本容器进入视口时显示
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            root: document.getElementById('contentContainer'),
+            threshold: 0.1
+        });
+        
+        // 观察所有文本容器
+        document.querySelectorAll('.text-container').forEach(container => {
+            observer.observe(container);
+        });
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createRain();
+            
+            // 为导航菜单项添加点击事件
+            document.querySelectorAll('#navMenu li').forEach(item => {
+                item.addEventListener('click', () => {
+                    const sectionId = item.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    scrollToSection(sectionId);
+                });
+            });
+        });
+        // 逐字打印效果
+        const typewriterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target.id === 'section5') {
+                    const lines = entry.target.querySelectorAll('.typewriter');
+                    lines.forEach((line, index) => {
+                        const delay = line.dataset.delay || index * 1.5;
+                        line.style.animationDelay = `${delay}s`;
+                        line.style.animationPlayState = 'running';
+                    });
+                    typewriterObserver.unobserve(entry.target); // 只触发一次
+                }
+            });
+        }, {
+            root: document.getElementById('contentContainer'),
+            threshold: 0.1
+        });
+
+       
+        const section5 = document.getElementById('section5');
+        if (section5) {
+            typewriterObserver.observe(section5);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>静墨阅读</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.8;
+            transition: all 0.3s ease;
+        }
+
+        /* 欢迎界面样式 */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .welcome-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 0 20px;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            /* margin-bottom: 1.5rem; */
+            color: #222;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+            color: #666;
+        }
+
+        .start-reading-btn {
+            background: none;
+            border: 1px solid #333;
+            color: #333;
+            padding: 12px 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-reading-btn:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* 阅读界面样式 */
+        .reader-container {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .reader-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .reader-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .reader-author {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .reader-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .control-btn:hover {
+            color: #333;
+        }
+
+        .reader-content {
+             user-select: none;
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE/Edge */
+            font-size: 1.1rem;
+            line-height: 2;
+            text-align: justify;
+            min-height: 300px;
+            /* 确保内容区域有高度 */
+        }
+
+        .reader-content p {
+            margin-bottom: 1.5em;
+            text-indent: 2em;
+            /* 中文段落首行缩进 */
+        }
+
+        /* 页脚控制区 */
+        .reader-footer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+        }
+
+        /* 固定在右下角的按钮 */
+        .fixed-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .fixed-btn {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ddd;
+            color: #333;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .fixed-btn:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        /* 加载提示 */
+        .loading {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* 错误提示 */
+        .error-message {
+            color: #e74c3c;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        /* 编码检测提示 */
+        .encoding-warning {
+            color: #856404;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        /* 设置面板 */
+        .settings-panel {
+            display: none;
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            width: 300px;
+            max-width: 90%;
+        }
+
+        .settings-panel.active {
+            display: block;
+        }
+
+        .settings-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .setting-item {
+            margin-bottom: 15px;
+        }
+
+        .setting-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        /* 夜间模式样式 */
+        body.dark-mode {
+            background-color: #222;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .reader-title,
+        body.dark-mode .control-btn:hover {
+            color: #fff;
+        }
+
+        body.dark-mode .reader-author {
+            color: #aaa;
+        }
+
+        body.dark-mode .settings-panel {
+            background-color: #333;
+        }
+
+        body.dark-mode .error-message {
+            color: #f8d7da;
+            background-color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        body.dark-mode .encoding-warning {
+            color: #fff3cd;
+            background-color: #533f03;
+            border-color: #ffeeba;
+        }
+
+        body.dark-mode .fixed-btn {
+            background-color: rgba(50, 50, 50, 0.8);
+            color: #e0e0e0;
+            border-color: #555;
+        }
+
+        body.dark-mode .fixed-btn:hover {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        /* 不同纸质颜色样式 */
+        body.paper-white {
+            background-color: #ffffff;
+        }
+
+        body.paper-ivory {
+            background-color: #fffaf0;
+        }
+
+        body.paper-beige {
+            background-color: #f5f5dc;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .reader-container {
+                padding: 20px 15px;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1rem;
+            }
+
+            .settings-panel {
+                top: 10px;
+                right: 10px;
+            }
+
+            .fixed-buttons {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 欢迎界面 -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-content">
+            <h1 class="welcome-title">静墨阅读</h1>
+            <p class="welcome-subtitle">You & Word</p>
+            <input type="file" id="fileInput" accept=".txt" style="display: none;">
+            <button class="start-reading-btn" id="startReadingBtn">选择TXT文件开始阅读</button>
+            <p class="welcome-subtitle" style="margin-top: 20px; font-size: 0.9rem; color: #888;">
+                支持TXT文件，系统会智能识别段落结构
+            </p>
+             <div style="text-align: center; margin-top: 50px; color: #888; font-size: 0.8rem;">
+                <a href="about reading tool.html" style="color: inherit; text-decoration: none;">© 2025 静墨阅读</a>
+             </div>
+        </div>
+    </div>
+
+    <!-- 阅读界面 -->
+    <div class="reader-container" id="readerContainer">
+        <div class="reader-header">
+            <h1 class="reader-title" id="novelTitle">加载中...</h1>
+            <div class="reader-author" id="novelAuthor"></div>
+            <div class="reader-controls">
+                <button class="control-btn" id="fontSizeDecrease">A-</button>
+                <button class="control-btn" id="fontSizeIncrease">A+</button>
+                <button class="control-btn" id="toggleDarkMode">夜间</button>
+                <button class="control-btn" id="toggleSettings">设置</button>
+            </div>
+        </div>
+
+        <div class="reader-content" id="novelContent">
+            <div class="loading">正在加载小说内容...</div>
+        </div>
+
+        <!-- 页脚控制区 -->
+        <div class="reader-footer">
+            <button class="control-btn" id="backToTopBtn">返回开头</button>
+        </div>
+    </div>
+
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-title">阅读设置</div>
+        <div class="setting-item">
+            <label for="paragraphMode">段落模式:</label>
+            <select id="paragraphMode">
+                <option value="auto">自动检测</option>
+                <option value="multi-line">多空行分隔</option>
+                <option value="single-line">单行分隔</option>
+                <option value="manual">手动分段(仅保留换行)</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <label for="indentMode">首行缩进:</label>
+            <select id="indentMode">
+                <option value="auto">自动(中文2字符)</option>
+                <option value="none">无缩进</option>
+                <option value="custom">自定义:</option>
+            </select>
+            <input type="number" id="customIndent" value="2" min="0" max="10" style="width: 50px; display: none;">
+        </div>
+        <div class="setting-item">
+            <label for="lineHeight">行高:</label>
+            <select id="lineHeight">
+                <option value="1.6">1.6 (紧凑)</option>
+                <option value="1.8" selected>1.8 (标准)</option>
+                <option value="2.0">2.0 (宽松)</option>
+                <option value="2.2">2.2 (超宽松)</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <label for="titleMode">标题模式:</label>
+            <select id="titleMode">
+                <option value="auto">自动检测</option>
+                <option value="filename">使用文件名</option>
+                <option value="firstline">使用第一行</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <label for="hideTitleLine">隐藏作为标题的第一行:</label>
+            <input type="checkbox" id="hideTitleLine" checked>
+        </div>
+        <div class="setting-item">
+            <label for="paperColor">纸质颜色:</label>
+            <select id="paperColor">
+                <option value="default">默认</option>
+                <option value="white">白色</option>
+                <option value="ivory">象牙色</option>
+                <option value="beige">米色</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <button id="selectNewFileBtn" class="start-reading-btn" style="width: 100%;">选择新文件</button>
+        </div>
+    </div>
+
+    <!-- 固定在右下角的按钮 -->
+    <div class="fixed-buttons">
+        <div class="fixed-btn" id="backToTopFixedBtn" title="返回顶部">
+            <span>↑</span>
+        </div>
+        <div class="fixed-btn" id="selectNewFileFixedBtn" title="选择新文件">
+            <span>📂</span>
+        </div>
+    </div>
+
+    <script>
+        // 等待DOM加载完成
+        document.addEventListener('DOMContentLoaded', function () {
+            // 获取DOM元素
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const startReadingBtn = document.getElementById('startReadingBtn');
+            const readerContainer = document.getElementById('readerContainer');
+            const novelContent = document.getElementById('novelContent');
+            const novelTitle = document.getElementById('novelTitle');
+            const novelAuthor = document.getElementById('novelAuthor');
+            const fontSizeDecrease = document.getElementById('fontSizeDecrease');
+            const fontSizeIncrease = document.getElementById('fontSizeIncrease');
+            const toggleDarkMode = document.getElementById('toggleDarkMode');
+            const fileInput = document.getElementById('fileInput');
+            const toggleSettings = document.getElementById('toggleSettings');
+            const settingsPanel = document.getElementById('settingsPanel');
+            const paragraphMode = document.getElementById('paragraphMode');
+            const indentMode = document.getElementById('indentMode');
+            const customIndent = document.getElementById('customIndent');
+            const lineHeight = document.getElementById('lineHeight');
+            const titleMode = document.getElementById('titleMode');
+            const hideTitleLine = document.getElementById('hideTitleLine');
+            const paperColor = document.getElementById('paperColor');
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            const backToTopFixedBtn = document.getElementById('backToTopFixedBtn');
+            const selectNewFileBtn = document.getElementById('selectNewFileBtn');
+            const selectNewFileFixedBtn = document.getElementById('selectNewFileFixedBtn');
+
+            // 阅读设置
+            const readingSettings = {
+                paragraphMode: 'auto',
+                indentMode: 'auto',
+                customIndent: 2,
+                lineHeight: 1.8,
+                titleMode: 'auto',
+                hideTitleLine: true,
+                paperColor: 'default'
+            };
+
+            // 开始阅读按钮点击事件
+            startReadingBtn.addEventListener('click', function () {
+                fileInput.click();
+            });
+
+            // 文件选择事件
+            fileInput.addEventListener('change', function () {
+                const file = fileInput.files[0];
+                if (file) {
+                    welcomeScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        welcomeScreen.style.display = 'none';
+                        readerContainer.style.display = 'block';
+                        loadNovel(file);
+                    }, 500);
+                }
+            });
+
+            // 字体大小调整
+            let currentFontSize = 1.1; // 默认字体大小rem
+
+            fontSizeDecrease.addEventListener('click', function () {
+                if (currentFontSize > 0.8) {
+                    currentFontSize -= 0.1;
+                    novelContent.style.fontSize = currentFontSize + 'rem';
+                }
+            });
+
+            fontSizeIncrease.addEventListener('click', function () {
+                if (currentFontSize < 1.8) {
+                    currentFontSize += 0.1;
+                    novelContent.style.fontSize = currentFontSize + 'rem';
+                }
+            });
+
+            // 夜间模式切换
+            toggleDarkMode.addEventListener('click', function () {
+                document.body.classList.toggle('dark-mode');
+                toggleDarkMode.textContent =
+                    document.body.classList.contains('dark-mode') ? '日间' : '夜间';
+                // 夜间模式覆盖纸质颜色
+                if (document.body.classList.contains('dark-mode')) {
+                    document.body.classList.remove('paper-white', 'paper-ivory', 'paper-beige');
+                } else {
+                    setPaperColor(readingSettings.paperColor);
+                }
+            });
+
+            // 设置面板切换
+            toggleSettings.addEventListener('click', function () {
+                settingsPanel.classList.toggle('active');
+            });
+
+            // 点击页面其他区域关闭设置面板
+            document.addEventListener('click', function (event) {
+                if (!settingsPanel.contains(event.target) && event.target !== toggleSettings) {
+                    settingsPanel.classList.remove('active');
+                }
+            });
+
+            // 格式选项事件监听
+            paragraphMode.addEventListener('change', function () {
+                readingSettings.paragraphMode = this.value;
+                reformatCurrentContent();
+            });
+
+            indentMode.addEventListener('change', function () {
+                readingSettings.indentMode = this.value;
+                customIndent.style.display = this.value === 'custom' ? 'inline-block' : 'none';
+                reformatCurrentContent();
+            });
+
+            customIndent.addEventListener('change', function () {
+                readingSettings.customIndent = parseInt(this.value) || 2;
+                reformatCurrentContent();
+            });
+
+            lineHeight.addEventListener('change', function () {
+                readingSettings.lineHeight = parseFloat(this.value);
+                novelContent.style.lineHeight = readingSettings.lineHeight;
+            });
+
+            titleMode.addEventListener('change', function () {
+                readingSettings.titleMode = this.value;
+                reformatCurrentContent();
+            });
+
+            hideTitleLine.addEventListener('change', function () {
+                readingSettings.hideTitleLine = this.checked;
+                reformatCurrentContent();
+            });
+
+            // 纸质颜色切换事件监听
+            paperColor.addEventListener('change', function () {
+                readingSettings.paperColor = this.value;
+                if (!document.body.classList.contains('dark-mode')) {
+                    setPaperColor(readingSettings.paperColor);
+                }
+            });
+
+            // 返回开头按钮事件
+            backToTopBtn.addEventListener('click', function () {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            backToTopFixedBtn.addEventListener('click', function () {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // 重新选择文件按钮事件
+            selectNewFileBtn.addEventListener('click', function () {
+                fileInput.click();
+                settingsPanel.classList.remove('active');
+            });
+
+            selectNewFileFixedBtn.addEventListener('click', function () {
+                fileInput.click();
+            });
+
+            // 滚动时显示/隐藏返回顶部按钮
+            window.addEventListener('scroll', function () {
+                if (window.scrollY > 300) {
+                    backToTopFixedBtn.style.display = 'flex';
+                } else {
+                    backToTopFixedBtn.style.display = 'none';
+                }
+            });
+
+            // 当前加载的内容
+            let currentContent = {
+                title: '未命名小说',
+                text: '',
+                originalTitle: '',
+                author: ''
+            };
+
+            // 加载小说内容
+            function loadNovel(file) {
+                // 显示加载状态
+                novelTitle.textContent = "加载中...";
+                novelAuthor.textContent = "";
+                novelContent.innerHTML = '<div class="loading">正在加载小说内容...</div>';
+
+                // 先使用内置示例内容
+                const fallbackContent = `雨、血和触手\n\n\n作者：未知\n\n冰冷的雨水像无数根细密的钢针...`;
+                formatNovelContent("示例小说", fallbackContent);
+
+                // 检测文件编码
+                detectEncoding(file).then(encoding => {
+                    // 读取文件内容
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const text = e.target.result;
+                        if (!text.trim()) {
+                            showError("文件内容为空");
+                            return;
+                        }
+
+                        // 存储原始内容和文件名
+                        currentContent = {
+                            title: file.name.replace(/\.txt$/i, ''),
+                            originalTitle: file.name.replace(/\.txt$/i, ''),
+                            text: text,
+                            author: detectAuthor(text)
+                        };
+
+                        // 检查是否可能存在编码问题
+                        if (encoding !== 'utf-8' && encoding !== 'ascii') {
+                            showEncodingWarning(`文件编码可能是 ${encoding.toUpperCase()}，若显示异常请尝试使用正确编码的文件`);
+                        }
+
+                        // 格式化并显示内容
+                        formatNovelContent(currentContent.title, currentContent.text);
+                    };
+                    reader.onerror = function () {
+                        showError("无法读取文件内容，请确保文件格式正确");
+                    };
+                    reader.readAsText(file);
+                }).catch(error => {
+                    console.error('编码检测失败:', error);
+                    // 继续读取文件，但可能显示异常
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const text = e.target.result;
+                        currentContent = {
+                            title: file.name.replace(/\.txt$/i, ''),
+                            originalTitle: file.name.replace(/\.txt$/i, ''),
+                            text: text,
+                            author: detectAuthor(text)
+                        };
+                        formatNovelContent(currentContent.title, currentContent.text);
+                        showEncodingWarning("无法确定文件编码，若显示异常请尝试使用UTF-8编码的文件");
+                    };
+                    reader.readAsText(file);
+                });
+            }
+
+            // 重新格式化当前内容
+            function reformatCurrentContent() {
+                if (currentContent.text) {
+                    formatNovelContent(currentContent.title, currentContent.text);
+                }
+            }
+
+            // 格式化段落，应用缩进
+            function formatParagraph(paragraph) {
+                let indent = '';
+                switch (readingSettings.indentMode) {
+                    case 'auto':
+                        indent = '2em';
+                        break;
+                    case 'none':
+                        indent = '0';
+                        break;
+                    case 'custom':
+                        indent = readingSettings.customIndent + 'em';
+                        break;
+                }
+                return `<p style="text-indent: ${indent};">${paragraph}</p>`;
+            }
+
+            // 自动检测最佳分段方式
+            function autoFormatContent(content) {
+                const multiLineParagraphs = content.split(/\n\s*\n+/).filter(paragraph => paragraph.trim());
+                const singleLineParagraphs = content.split(/\n/).filter(line => line.trim());
+
+                if (multiLineParagraphs.length > singleLineParagraphs.length / 2) {
+                    return multiLineParagraphs.map(paragraph => formatParagraph(paragraph)).join('');
+                } else {
+                    return singleLineParagraphs.map(line => formatParagraph(line)).join('');
+                }
+            }
+
+            // 格式化小说内容
+            function formatNovelContent(title, content) {
+                // 智能检测标题
+                let detectedTitle = detectTitle(content);
+
+                // 根据标题模式设置标题
+                let finalTitle = '';
+                switch (readingSettings.titleMode) {
+                    case 'filename':
+                        finalTitle = currentContent.originalTitle;
+                        break;
+                    case 'firstline':
+                        finalTitle = detectedTitle;
+                        break;
+                    case 'auto':
+                    default:
+                        // 自动模式：如果第一行长度适中，则使用第一行作为标题，否则使用文件名
+                        finalTitle = isTitleValid(detectedTitle) ? detectedTitle : currentContent.originalTitle;
+                        break;
+                }
+
+                // 设置标题和作者
+                novelTitle.textContent = finalTitle;
+                novelAuthor.textContent = currentContent.author ? `作者：${currentContent.author}` : '';
+
+                // 清除之前的警告
+                const warnings = document.querySelectorAll('.encoding-warning, .error-message');
+                warnings.forEach(warning => warning.remove());
+
+                let formattedContent = '';
+
+                try {
+                    // 获取内容的行
+                    const lines = content.split('\n');
+
+                    // 决定是否隐藏作为标题的第一行
+                    let contentToFormat = content;
+                    if (readingSettings.hideTitleLine && readingSettings.titleMode !== 'filename' &&
+                        detectedTitle === lines[0].trim()) {
+                        contentToFormat = lines.slice(1).join('\n');
+                    }
+
+                    // 根据段落模式格式化内容
+                    switch (readingSettings.paragraphMode) {
+                        case 'auto':
+                            formattedContent = autoFormatContent(contentToFormat);
+                            break;
+                        case 'multi-line':
+                            formattedContent = contentToFormat
+                               .split(/\n\s*\n+/)
+                               .filter(paragraph => paragraph.trim())
+                               .map(paragraph => formatParagraph(paragraph))
+                               .join('');
+                            break;
+                        case 'single-line':
+                            formattedContent = contentToFormat
+                               .split(/\n/)
+                               .filter(line => line.trim())
+                               .map(line => formatParagraph(line))
+                               .join('');
+                            break;
+                        case 'manual':
+                            formattedContent = contentToFormat
+                               .split(/\n/)
+                               .filter(line => line.trim())
+                               .map(line => formatParagraph(line))
+                               .join('');
+                            break;
+                    }
+                } catch (error) {
+                    showError("格式化内容时出错，请检查文件格式");
+                    console.error(error);
+                }
+
+                // 显示格式化后的内容
+                novelContent.innerHTML = formattedContent;
+            }
+
+            // 设置纸质颜色
+            function setPaperColor(color) {
+                document.body.classList.remove('paper-white', 'paper-ivory', 'paper-beige');
+                switch (color) {
+                    case 'white':
+                        document.body.classList.add('paper-white');
+                        break;
+                    case 'ivory':
+                        document.body.classList.add('paper-ivory');
+                        break;
+                    case 'beige':
+                        document.body.classList.add('paper-beige');
+                        break;
+                    default:
+                        // 移除所有纸质颜色类
+                        document.body.classList.remove('paper-white', 'paper-ivory', 'paper-beige');
+                        break;
+                }
+            }
+
+            // 以下是缺失的辅助函数的占位实现
+            function detectEncoding(file) {
+                return new Promise((resolve) => {
+                    resolve('utf-8');
+                });
+            }
+
+            function detectAuthor(text) {
+                return '';
+            }
+
+            function detectTitle(text) {
+                return text.split('\n')[0].trim();
+            }
+
+            function isTitleValid(title) {
+                return title.length > 0 && title.length < 50;
+            }
+
+            function showError(message) {
+                const errorElement = document.createElement('div');
+                errorElement.classList.add('error-message');
+                errorElement.textContent = message;
+                novelContent.appendChild(errorElement);
+            }
+
+            function showEncodingWarning(message) {
+                const warningElement = document.createElement('div');
+                warningElement.classList.add('encoding-warning');
+                warningElement.textContent = message;
+                novelContent.appendChild(warningElement);
+            }
+        });
+    </script>
+</body>
+
+</html>
